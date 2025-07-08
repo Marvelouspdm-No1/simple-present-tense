@@ -129,9 +129,8 @@
 <h2>Simple Present Tense Grammar Quiz - 简单现在时语法测验</h2>
 <div style="background: #e6f3ff; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
     <p><strong>💡 温馨提示：</strong></p>
-    <p>• 📱 <strong>发送成绩给老师</strong> - 直接发送到老师WhatsApp (+60127317286)</p>
     <p>• 🖼️ <strong>生成成绩单图片</strong> - 制作正式的成绩单图片，可下载后发送给老师</p>
-    <p>• 💾 图片格式的成绩单更正式，包含详细的错题分析，适合向老师汇报</p>
+    <p>• 💾 图片格式的成绩单包含详细的错题分析，适合向老师汇报学习情况</p>
 </div>
 
 <div class="tabs">
@@ -381,7 +380,6 @@ function displayResults(name, form, score, results, unanswered) {
         ${unanswered > 0 ? `<p>注意：你有 ${unanswered} 题没有作答</p>` : ''}
         <p>${getFeedback(score)}</p>
         <div class="save-buttons">
-            <button class="whatsapp-btn" onclick="sendToWhatsApp('${name}', '${form}', ${score}, ${unanswered}, 'teacher')">📱 发送成绩给老师</button>
             <button class="whatsapp-btn" onclick="generateReportImage('${name}', '${form}', ${score}, ${unanswered})">🖼️ 生成成绩单图片</button>
         </div>
         <div id="reportCanvas" style="margin-top: 20px;"></div>
@@ -420,58 +418,6 @@ function getFeedback(score) {
     } else {
         return "第一次做这样的语法题吧？别担心！每个人都是这样进步的，多练习就会好很多啦！🌱";
     }
-}
-
-function sendToWhatsApp(name, form, score, unanswered, recipient = 'teacher') {
-    const date = new Date().toLocaleString();
-    const percentage = Math.round((score / 20) * 100);
-    const grade = getGrade(score);
-    
-    let message = '';
-    let whatsappUrl = '';
-    
-    if (recipient === 'teacher') {
-        message += `尊敬的老师，您好！\n\n`;
-        message += `我是 ${name} (${form})，刚完成了Simple Present Tense Grammar测验，现向您汇报成绩：\n\n`;
-        message += `📊 测验成绩: ${score}/20 分 (${percentage}%)\n`;
-        message += `⭐ 等级: ${grade}\n`;
-        message += `📅 测验时间: ${date}\n`;
-        if (unanswered > 0) {
-            message += `⚠️ 未完成题目: ${unanswered} 题\n`;
-        }
-        message += `\n🎯 掌握程度: ${getSkillLevel(score)}\n`;
-        message += `\n我会继续努力学习英语语法，谢谢老师的指导！`;
-        
-        // Encode the message for URL
-        const encodedMessage = encodeURIComponent(message);
-        
-        // Create WhatsApp URL with specific teacher phone number
-        whatsappUrl = `https://wa.me/60127317286?text=${encodedMessage}`;
-        
-    } else {
-        // General message (fallback)
-        message += `📚 Simple Present Tense Grammar Quiz 成绩报告\n\n`;
-        message += `👤 姓名: ${name}\n`;
-        message += `🎓 年级: ${form}\n`;
-        message += `📅 测验日期: ${date}\n`;
-        message += `📊 得分: ${score}/20 (${percentage}%)\n`;
-        message += `⭐ 等级: ${grade}\n`;
-        if (unanswered > 0) {
-            message += `⚠️ 未作答题目: ${unanswered} 题\n`;
-        }
-        message += `\n📝 评语: ${getFeedback(score)}\n`;
-        message += `\n🎯 简单现在时掌握程度: ${getSkillLevel(score)}\n`;
-        message += `\n💪 继续加油，学好英语语法！`;
-        
-        // Encode the message for URL
-        const encodedMessage = encodeURIComponent(message);
-        
-        // Create general WhatsApp URL
-        whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
-    }
-    
-    // Open WhatsApp
-    window.open(whatsappUrl, '_blank');
 }
 
 function generateReportImage(name, form, score, unanswered) {
@@ -725,7 +671,6 @@ function loadHistory() {
                 <p>得分: <strong>${attempt.score} / 20</strong></p>
                 <button onclick="viewAttemptDetails(${index})">查看详情</button>
                 <div style="margin-top: 10px;">
-                    <button class="whatsapp-btn" onclick="sendHistoryToWhatsApp(${index}, 'teacher')" style="font-size: 12px; padding: 8px 12px;">📱 发送成绩给老师</button>
                     <button class="download-btn" onclick="generateHistoryReportImage(${index})" style="font-size: 12px; padding: 8px 12px;">🖼️ 生成成绩单图片</button>
                 </div>
                 <div id="attemptDetails${index}" style="display: none; margin-top: 10px;">
@@ -745,96 +690,6 @@ function loadHistory() {
     });
     
     historyList.innerHTML = html;
-}
-
-function sendHistoryToWhatsApp(attemptIndex, recipient = 'teacher') {
-    const attempts = JSON.parse(localStorage.getItem('simplePresentQuizAttempts') || '[]');
-    const attempt = attempts[attemptIndex];
-    
-    if (!attempt) {
-        alert("找不到该测验记录！");
-        return;
-    }
-    
-    const percentage = Math.round((attempt.score / 20) * 100);
-    const grade = getGrade(attempt.score);
-    const unanswered = attempt.results.filter(r => r.selected === "未作答").length;
-    
-    let message = '';
-    let whatsappUrl = '';
-    
-    if (recipient === 'teacher') {
-        message += `尊敬的老师，您好！\n\n`;
-        message += `我是 ${attempt.name} (${attempt.form})，向您汇报Simple Present Tense Grammar测验成绩：\n\n`;
-        message += `📊 测验成绩: ${attempt.score}/20 分 (${percentage}%)\n`;
-        message += `⭐ 等级: ${grade}\n`;
-        message += `📅 测验时间: ${attempt.date}\n`;
-        if (unanswered > 0) {
-            message += `⚠️ 未完成题目: ${unanswered} 题\n`;
-        }
-        message += `\n🎯 掌握程度: ${getSkillLevel(attempt.score)}\n`;
-        
-        // Add wrong answers for teacher
-        const wrongAnswers = attempt.results.filter(r => !r.isCorrect);
-        if (wrongAnswers.length > 0) {
-            message += `\n❌ 需要加强的题目:\n`;
-            wrongAnswers.slice(0, 3).forEach((r, index) => {
-                const qNum = attempt.results.indexOf(r) + 1;
-                message += `${index + 1}. 第${qNum}题: 选择了"${r.selected}"，正确答案是"${r.correct}"\n`;
-            });
-            if (wrongAnswers.length > 3) {
-                message += `... 还有 ${wrongAnswers.length - 3} 道需要复习\n`;
-            }
-        }
-        
-        message += `\n我会针对错题进行复习，谢谢老师的指导！`;
-        
-        // Encode the message for URL
-        const encodedMessage = encodeURIComponent(message);
-        
-        // Create WhatsApp URL with specific teacher phone number
-        whatsappUrl = `https://wa.me/60127317286?text=${encodedMessage}`;
-        
-    } else {
-        // General message (keeping the original format)
-        message += `📚 Simple Present Tense Grammar Quiz 成绩报告\n\n`;
-        message += `👤 姓名: ${attempt.name}\n`;
-        message += `🎓 年级: ${attempt.form}\n`;
-        message += `📅 测验日期: ${attempt.date}\n`;
-        message += `📊 得分: ${attempt.score}/20 (${percentage}%)\n`;
-        message += `⭐ 等级: ${grade}\n`;
-        
-        if (unanswered > 0) {
-            message += `⚠️ 未作答题目: ${unanswered} 题\n`;
-        }
-        
-        message += `\n📝 评语: ${getFeedback(attempt.score)}\n`;
-        message += `\n🎯 简单现在时掌握程度: ${getSkillLevel(attempt.score)}\n`;
-        
-        // Add wrong answers details
-        const wrongAnswers = attempt.results.filter(r => !r.isCorrect);
-        if (wrongAnswers.length > 0) {
-            message += `\n❌ 错题分析:\n`;
-            wrongAnswers.slice(0, 3).forEach((r, index) => {
-                const qNum = attempt.results.indexOf(r) + 1;
-                message += `${index + 1}. 第${qNum}题: ${r.selected} → ${r.correct}\n`;
-            });
-            if (wrongAnswers.length > 3) {
-                message += `... 还有 ${wrongAnswers.length - 3} 道错题\n`;
-            }
-        }
-        
-        message += `\n💪 继续加油，学好英语语法！`;
-        
-        // Encode the message for URL
-        const encodedMessage = encodeURIComponent(message);
-        
-        // Create general WhatsApp URL
-        whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
-    }
-    
-    // Open WhatsApp
-    window.open(whatsappUrl, '_blank');
 }
 
 function generateHistoryReportImage(attemptIndex) {
