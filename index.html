@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Present Tense Grammar Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f2f2f2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .result {
+            background: #e6ffe6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .history {
+            background: #e6f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background: #ddd;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background: #4CAF50;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        .save-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .save-btn {
+            background-color: #2196F3;
+            margin: 5px;
+        }
+        .save-btn:hover {
+            background-color: #0b7dda;
+        }
+        .whatsapp-btn {
+            background-color: #25D366;
+            margin: 5px;
+        }
+        .whatsapp-btn:hover {
+            background-color: #1da851;
+        }
+        .download-btn {
+            background-color: #FF6B35;
+            margin: 5px;
+        }
+        .download-btn:hover {
+            background-color: #E55A2B;
+        }
+        #reportCanvas {
+            text-align: center;
+        }
+        .canvas-container {
+            display: inline-block;
+            margin: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            background: white;
+        }
+        label {
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        label:hover {
+            background-color: #f0f0f0;
+        }
+        input[type="radio"] {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Simple Present Tense Grammar Quiz - 简单现在时语法测验</h2>
+<div style="background: #e6f3ff; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+    <p><strong>💡 温馨提示：</strong></p>
+    <p>• 📱 <strong>发送成绩给老师</strong> - 直接发送到老师WhatsApp (+60127317286)</p>
+    <p>• 🖼️ <strong>生成成绩单图片</strong> - 制作正式的成绩单图片，可下载后发送给老师</p>
+    <p>• 💾 图片格式的成绩单更正式，包含详细的错题分析，适合向老师汇报</p>
+</div>
+
+<div class="tabs">
+    <div class="tab active" onclick="showTab('quiz')">做测验</div>
+    <div class="tab" onclick="showTab('history')">查看记录</div>
+</div>
+
+<div id="quiz" class="tab-content active">
+    <form id="quizForm">
+        <label>Name (名字):</label><br>
+        <input type="text" id="name" required><br><br>
+
+        <label>Form (年级):</label><br>
+        <select id="form" required>
+            <option value="">Select</option>
+            <option value="F1">F1</option>
+            <option value="F2">F2</option>
+            <option value="F3">F3</option>
+            <option value="F4">F4</option>
+            <option value="F5">F5</option>
+        </select><br><br>
+
+        <div id="questions"></div>
+
+        <button type="button" onclick="submitQuiz()">提交答案</button>
+        <button type="button" onclick="saveProgress()">保存进度</button>
+        <button type="button" onclick="loadProgress()">加载进度</button>
+    </form>
+
+    <div id="result" class="result hidden"></div>
+</div>
+
+<div id="history" class="tab-content">
+    <h3>你的测验记录</h3>
+    <div id="historyList"></div>
+</div>
+
+<script>
+const questions = [
+    {
+        q: "She ___ to school every day.",
+        options: ["go", "goes", "going", "gone"],
+        answer: "goes",
+        explain: "第三人称单数主语'she'需要动词加's'，'goes'是正确的。",
+        encourage: "第三人称单数的变化掌握得很好！记住要在动词后加-s哦~"
+    },
+    {
+        q: "They ___ football on weekends.",
+        options: ["plays", "play", "playing", "played"],
+        answer: "play",
+        explain: "复数主语'they'用动词原形'play'。",
+        encourage: "复数主语的用法完全正确！你已经理解了基本规则，真棒！"
+    },
+    {
+        q: "My brother ___ TV in the evening.",
+        options: ["watch", "watches", "watching", "watched"],
+        answer: "watches",
+        explain: "第三人称单数'my brother'需要动词加'es'，因为'watch'以'ch'结尾。",
+        encourage: "特殊变化的第三人称单数也做对了！这个细节你也注意到了，观察力真强！"
+    },
+    {
+        q: "Water ___ at 100 degrees Celsius.",
+        options: ["boil", "boils", "boiling", "boiled"],
+        answer: "boils",
+        explain: "表示客观事实或科学真理时，即使主语是不可数名词也要用第三人称单数形式。",
+        encourage: "科学事实的表述完全正确！这个重要语法点你已经掌握啦！"
+    },
+    {
+        q: "I ___ my teeth twice a day.",
+        options: ["brushes", "brush", "brushing", "brushed"],
+        answer: "brush",
+        explain: "第一人称'I'用动词原形'brush'。",
+        encourage: "第一人称的用法完全正确！基本概念你已经理解得很透彻啦！"
+    },
+    {
+        q: "The sun ___ in the east.",
+        options: ["rise", "rises", "rising", "rose"],
+        answer: "rises",
+        explain: "表示自然现象的客观事实，主语'sun'是第三人称单数，动词加's'。",
+        encourage: "自然现象的表述完全正确！你的语法知识很扎实！"
+    },
+    {
+        q: "We ___ English class on Mondays.",
+        options: ["has", "have", "having", "had"],
+        answer: "have",
+        explain: "第一人称复数'we'用动词原形'have'。",
+        encourage: "复数主语的用法完全正确！这个基本规则你已经记住啦！"
+    },
+    {
+        q: "He ___ his homework after dinner.",
+        options: ["do", "does", "doing", "done"],
+        answer: "does",
+        explain: "第三人称单数'he'需要动词加'es'，因为'do'以'o'结尾。",
+        encourage: "特殊变化的第三人称单数也做对了！这种不规则变化你也记住了，真厉害！"
+    },
+    {
+        q: "Cats ___ mice.",
+        options: ["catches", "catch", "catching", "caught"],
+        answer: "catch",
+        explain: "复数主语'cats'用动词原形'catch'。",
+        encourage: "动物习性的表述完全正确！你已经掌握了表示习惯的用法！"
+    },
+    {
+        q: "My mother ___ delicious cookies.",
+        options: ["make", "makes", "making", "made"],
+        answer: "makes",
+        explain: "第三人称单数'my mother'需要动词加's'。",
+        encourage: "家庭成员作为主语的用法完全正确！日常英语的表述很准确！"
+    },
+    {
+        q: "The train ___ at 8:00 every morning.",
+        options: ["leave", "leaves", "leaving", "left"],
+        answer: "leaves",
+        explain: "表示固定时间表的事件，主语'train'是第三人称单数，动词加's'。",
+        encourage: "时间表的表述完全正确！这个实用语法点你已经掌握啦！"
+    },
+    {
+        q: "You ___ very hard for your exams.",
+        options: ["works", "work", "working", "worked"],
+        answer: "work",
+        explain: "第二人称'you'用动词原形'work'。",
+        encourage: "第二人称的用法完全正确！基本语法概念你已经理解得很清楚！"
+    },
+    {
+        q: "It ___ a lot in rainy season.",
+        options: ["rain", "rains", "raining", "rained"],
+        answer: "rains",
+        explain: "表示天气时，用'it'作主语，第三人称单数形式'rains'。",
+        encourage: "天气的表述完全正确！非人称主语的用法掌握得很好！"
+    },
+    {
+        q: "Birds ___ south for the winter.",
+        options: ["flys", "fly", "flies", "flying"],
+        answer: "fly",
+        explain: "复数主语'birds'用动词原形'fly'。",
+        encourage: "动物迁徙的表述完全正确！你已经掌握了表示习惯性动作的用法！"
+    },
+    {
+        q: "She ___ three languages fluently.",
+        options: ["speak", "speaks", "speaking", "spoken"],
+        answer: "speaks",
+        explain: "第三人称单数'she'需要动词加's'。",
+        encourage: "语言能力的表述完全正确！第三人称单数的变化你已经很熟练啦！"
+    },
+    {
+        q: "The Earth ___ around the Sun.",
+        options: ["move", "moves", "moving", "moved"],
+        answer: "moves",
+        explain: "表示科学事实，主语'Earth'是第三人称单数，动词加's'。",
+        encourage: "科学事实的表述完全正确！这个重要语法点你已经掌握啦！"
+    },
+    {
+        q: "They ___ to music on their way to school.",
+        options: ["listens", "listen", "listening", "listened"],
+        answer: "listen",
+        explain: "复数主语'they'用动词原形'listen'。",
+        encourage: "日常习惯的表述完全正确！复数主语的用法你已经很熟悉啦！"
+    },
+    {
+        q: "A doctor ___ sick people.",
+        options: ["help", "helps", "helping", "helped"],
+        answer: "helps",
+        explain: "表示职业的一般行为，单数主语'doctor'需要动词加's'。",
+        encourage: "职业行为的表述完全正确！你已经掌握了表示普遍真理的用法！"
+    },
+    {
+        q: "We ___ our grandparents every Sunday.",
+        options: ["visits", "visit", "visiting", "visited"],
+        answer: "visit",
+        explain: "第一人称复数'we'用动词原形'visit'。",
+        encourage: "家庭活动的表述完全正确！复数主语的用法你已经掌握得很好了！"
+    },
+    {
+        q: "He ___ to be a scientist when he grows up.",
+        options: ["want", "wants", "wanting", "wanted"],
+        answer: "wants",
+        explain: "第三人称单数'he'需要动词加's'。",
+        encourage: "未来愿望的表述完全正确！你已经掌握了表示长期愿望的用法！"
+    }
+];
+
+function showTab(tabId) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Deactivate all tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Show selected tab content
+    document.getElementById(tabId).classList.add('active');
+    
+    // Activate selected tab
+    event.currentTarget.classList.add('active');
+    
+    // If history tab is selected, load history
+    if (tabId === 'history') {
+        loadHistory();
+    }
+}
+
+function submitQuiz() {
+    const name = document.getElementById('name').value;
+    const form = document.getElementById('form').value;
+    
+    if (!name || !form) {
+        alert("请填写完整的个人信息！");
+        return;
+    }
+    
+    let score = 0;
+    let results = [];
+    let unanswered = 0;
+    
+    questions.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        const isCorrect = selected && selected.value === q.answer;
+        
+        if (isCorrect) score++;
+        if (!selected) unanswered++;
+        
+        results.push({
+            question: q.q,
+            selected: selected ? selected.value : "未作答",
+            correct: q.answer,
+            isCorrect: isCorrect,
+            explain: q.explain,
+            encourage: q.encourage
+        });
+    });
+    
+    // Save the attempt to history
+    saveAttempt(name, form, score, results);
+    
+    // Display results
+    displayResults(name, form, score, results, unanswered);
+}
+
+function displayResults(name, form, score, results, unanswered) {
+    let output = `
+        <h3>名字: ${name}</h3>
+        <h3>年级: ${form}</h3>
+        <h3>得分: <span class="${score >= 15 ? 'correct' : 'incorrect'}">${score} / 20</span></h3>
+        ${unanswered > 0 ? `<p>注意：你有 ${unanswered} 题没有作答</p>` : ''}
+        <p>${getFeedback(score)}</p>
+        <div class="save-buttons">
+            <button class="whatsapp-btn" onclick="sendToWhatsApp('${name}', '${form}', ${score}, ${unanswered}, 'teacher')">📱 发送成绩给老师</button>
+            <button class="whatsapp-btn" onclick="generateReportImage('${name}', '${form}', ${score}, ${unanswered})">🖼️ 生成成绩单图片</button>
+        </div>
+        <div id="reportCanvas" style="margin-top: 20px;"></div>
+        <hr>
+    `;
+    
+    results.forEach((r, index) => {
+        output += `
+            <div class="question">
+                <p><strong>第${index + 1}题：${r.isCorrect ? '正确 ✅' : '错误 ❌'}</strong></p>
+                <p>题目: ${r.question}</p>
+                ${!r.isCorrect ? `<p>你的答案: <span class="incorrect">${r.selected}</span></p>` : ''}
+                <p>正确答案: <span class="correct">${r.correct}</span></p>
+                <p>解释: ${r.explain}</p>
+                <p>鼓励: ${r.encourage}</p>
+            </div>
+        `;
+    });
+    
+    document.getElementById('result').innerHTML = output;
+    document.getElementById('result').classList.remove('hidden');
+    
+    // Scroll to results
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+}
+
+function getFeedback(score) {
+    if (score === 20) {
+        return "太厉害啦！全对耶！你的一般现在时用得跟母语者一样棒！🎉 给自己点个赞吧！";
+    } else if (score >= 17) {
+        return "成绩很不错哦！只有几个小地方需要注意，你已经掌握大部分语法啦！✨";
+    } else if (score >= 14) {
+        return "挺好的！基本语法都掌握了，错题看看解释，下次会更好哒！😊";
+    } else if (score >= 10) {
+        return "有进步空间哦！错题都是学习机会，慢慢来，你的语法会越来越棒的！💪";
+    } else {
+        return "第一次做这样的语法题吧？别担心！每个人都是这样进步的，多练习就会好很多啦！🌱";
+    }
+}
+
+function sendToWhatsApp(name, form, score, unanswered, recipient = 'teacher') {
+    const date = new Date().toLocaleString();
+    const percentage = Math.round((score / 20) * 100);
+    const grade = getGrade(score);
+    
+    let message = '';
+    let whatsappUrl = '';
+    
+    if (recipient === 'teacher') {
+        message += `尊敬的老师，您好！\n\n`;
+        message += `我是 ${name} (${form})，刚完成了Simple Present Tense Grammar测验，现向您汇报成绩：\n\n`;
+        message += `📊 测验成绩: ${score}/20 分 (${percentage}%)\n`;
+        message += `⭐ 等级: ${grade}\n`;
+        message += `📅 测验时间: ${date}\n`;
+        if (unanswered > 0) {
+            message += `⚠️ 未完成题目: ${unanswered} 题\n`;
+        }
+        message += `\n🎯 掌握程度: ${getSkillLevel(score)}\n`;
+        message += `\n我会继续努力学习英语语法，谢谢老师的指导！`;
+        
+        // Encode the message for URL
+        const encodedMessage = encodeURIComponent(message);
+        
+        // Create WhatsApp URL with specific teacher phone number
+        whatsappUrl = `https://wa.me/60127317286?text=${encodedMessage}`;
+        
+    } else {
+        // General message (fallback)
+        message += `📚 Simple Present Tense Grammar Quiz 成绩报告\n\n`;
+        message += `👤 姓名: ${name}\n`;
+        message += `🎓 年级: ${form}\n`;
+        message += `📅 测验日期: ${date}\n`;
+        message += `📊 得分: ${score}/20 (${percentage}%)\n`;
+        message += `⭐ 等级: ${grade}\n`;
+        if (unanswered > 0) {
+            message += `⚠️ 未作答题目: ${unanswered} 题\n`;
+        }
+        message += `\n📝 评语: ${getFeedback(score)}\n`;
+        message += `\n🎯 简单现在时掌握程度: ${getSkillLevel(score)}\n`;
+        message += `\n💪 继续加油，学好英语语法！`;
+        
+        // Encode the message for URL
+        const encodedMessage = encodeURIComponent(message);
+        
+        // Create general WhatsApp URL
+        whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+    }
+    
+    // Open WhatsApp
+    window.open(whatsappUrl, '_blank');
+}
+
+function generateReportImage(name, form, score, unanswered) {
+    // Get current quiz results for error analysis
+    let wrongAnswers = [];
+    questions.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        const isCorrect = selected && selected.value === q.answer;
+        if (!isCorrect) {
+            wrongAnswers.push({
+                number: index + 1,
+                question: q.q.substring(0, 50) + "...",
+                selected: selected ? selected.value : "未作答",
+                correct: q.answer
+            });
+        }
+    });
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Calculate canvas height based on number of wrong answers
+    const baseHeight = 800;
+    const errorHeight = wrongAnswers.length * 30 + 100; // 30px per error + some padding
+    canvas.width = 800;
+    canvas.height = Math.max(baseHeight, baseHeight + errorHeight);
+    
+    // Background gradient
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#f8f9fa');
+    gradient.addColorStop(1, '#e9ecef');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Header background
+    ctx.fillStyle = '#4CAF50';
+    ctx.fillRect(0, 0, canvas.width, 120);
+    
+    // Title
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 32px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Simple Present Tense Quiz', canvas.width/2, 50);
+    ctx.fillText('简单现在时语法测验成绩单', canvas.width/2, 90);
+    
+    // Student Info Section
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 24px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText('学生信息 Student Information', 50, 170);
+    
+    ctx.font = '20px Arial';
+    ctx.fillText(`姓名 Name: ${name}`, 50, 210);
+    ctx.fillText(`年级 Form: ${form}`, 50, 240);
+    ctx.fillText(`测验日期 Date: ${new Date().toLocaleDateString()}`, 50, 270);
+    
+    // Score Section
+    const percentage = Math.round((score / 20) * 100);
+    
+    ctx.fillStyle = '#2196F3';
+    ctx.font = 'bold 24px Arial';
+    ctx.fillText('测验成绩 Test Results', 50, 320);
+    
+    // Score circle
+    const centerX = canvas.width - 150;
+    const centerY = 370;
+    const radius = 80;
+    
+    // Draw score circle background
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.fillStyle = score >= 15 ? '#4CAF50' : score >= 10 ? '#FF9800' : '#F44336';
+    ctx.fill();
+    
+    // Score text in circle
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 36px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${score}/20`, centerX, centerY - 10);
+    ctx.font = 'bold 20px Arial';
+    ctx.fillText(`${percentage}%`, centerX, centerY + 20);
+    
+    // Detailed scores
+    ctx.fillStyle = '#333';
+    ctx.font = '20px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText(`总分 Total Score: ${score}/20 (${percentage}%)`, 50, 360);
+    
+    if (unanswered > 0) {
+        ctx.fillStyle = '#F44336';
+        ctx.fillText(`未作答题目 Unanswered: ${unanswered} 题`, 50, 390);
+    }
+    
+    // Performance Analysis
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 24px Arial';
+    let currentY = unanswered > 0 ? 450 : 420;
+    ctx.fillText('表现分析 Performance Analysis', 50, currentY);
+    
+    ctx.font = '18px Arial';
+    const feedback = getFeedback(score);
+    const words = feedback.split(' ');
+    let line = '';
+    currentY += 30;
+    
+    for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        const testWidth = metrics.width;
+        if (testWidth > 700 && n > 0) {
+            ctx.fillText(line, 50, currentY);
+            line = words[n] + ' ';
+            currentY += 25;
+        } else {
+            line = testLine;
+        }
+    }
+    ctx.fillText(line, 50, currentY);
+    
+    // Wrong Answers Section
+    if (wrongAnswers.length > 0) {
+        currentY += 50;
+        ctx.fillStyle = '#F44336';
+        ctx.font = 'bold 20px Arial';
+        ctx.fillText(`错题分析 Wrong Answers (${wrongAnswers.length} 题)`, 50, currentY);
+        
+        ctx.fillStyle = '#333';
+        ctx.font = '16px Arial';
+        
+        // Show ALL wrong answers
+        wrongAnswers.forEach((error, index) => {
+            currentY += 30;
+            ctx.fillText(`${index + 1}. 第${error.number}题: ${error.selected} → ${error.correct}`, 50, currentY);
+        });
+    }
+    
+    // Footer
+    ctx.fillStyle = '#666';
+    ctx.font = '14px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('继续加油，学好英语语法！Keep up the good work!', canvas.width/2, canvas.height - 30);
+    
+    // Display canvas and download options
+    const reportDiv = document.getElementById('reportCanvas');
+    reportDiv.innerHTML = `
+        <div class="canvas-container">
+            <h3>📋 成绩单已生成</h3>
+            <canvas id="generatedCanvas" width="800" height="${canvas.height}" style="max-width: 100%; height: auto; border: 1px solid #ddd;"></canvas>
+            <div style="margin-top: 15px;">
+                <button class="download-btn" onclick="downloadReportImage()">💾 下载图片</button>
+                <button class="whatsapp-btn" onclick="shareReportImage()">📱 发送给老师</button>
+            </div>
+            <p style="color: #666; font-size: 14px; margin-top: 10px;">
+                💡 提示：点击"下载图片"保存到设备，或点击"发送给老师"直接通过WhatsApp发送
+            </p>
+        </div>
+    `;
+    
+    // Copy canvas content to displayed canvas
+    const displayCanvas = document.getElementById('generatedCanvas');
+    displayCanvas.height = canvas.height;
+    const displayCtx = displayCanvas.getContext('2d');
+    displayCtx.drawImage(canvas, 0, 0);
+    
+    // Store canvas globally for download
+    window.reportCanvas = canvas;
+    
+    // Scroll to canvas
+    reportDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+function downloadReportImage() {
+    if (window.reportCanvas) {
+        const link = document.createElement('a');
+        link.download = `Simple_Present_Tense_成绩单_${new Date().toISOString().split('T')[0]}.png`;
+        link.href = window.reportCanvas.toDataURL();
+        link.click();
+    }
+}
+
+function shareReportImage() {
+    if (navigator.share && window.reportCanvas) {
+        // Convert canvas to blob
+        window.reportCanvas.toBlob(function(blob) {
+            const file = new File([blob], 'Simple_Present_Tense_成绩单.png', { type: 'image/png' });
+            navigator.share({
+                title: 'Simple Present Tense Grammar Quiz 成绩单',
+                text: '我的简单现在时语法测验成绩单',
+                files: [file]
+            }).catch(err => {
+                console.log('分享失败:', err);
+                // Fallback to download
+                downloadReportImage();
+            });
+        });
+    } else {
+        // Fallback: open WhatsApp with instruction to teacher
+        const message = encodeURIComponent('老师您好！我刚生成了Simple Present Tense语法测验成绩单图片，请查看我发送的图片 📋✨');
+        window.open(`https://wa.me/60127317286?text=${message}`, '_blank');
+        alert('请手动下载图片，然后在WhatsApp中发送给老师 📱');
+    }
+}
+
+function getGrade(score) {
+    if (score >= 18) return "A+ 优秀";
+    if (score >= 16) return "A 良好";
+    if (score >= 14) return "B+ 不错";
+    if (score >= 12) return "B 及格";
+    if (score >= 10) return "C+ 需要努力";
+    if (score >= 8) return "C 需要加强";
+    return "D 需要重新学习";
+}
+
+function getSkillLevel(score) {
+    if (score >= 18) return "专家级 🌟";
+    if (score >= 15) return "熟练级 ⭐";
+    if (score >= 12) return "中级 📚";
+    if (score >= 8) return "初级 📖";
+    return "入门级 🔰";
+}
+
+function saveAttempt(name, form, score, results) {
+    const attempts = JSON.parse(localStorage.getItem('simplePresentQuizAttempts') || '[]');
+    const attempt = {
+        date: new Date().toLocaleString(),
+        name,
+        form,
+        score,
+        results
+    };
+    
+    attempts.unshift(attempt); // Add new attempt at beginning
+    localStorage.setItem('simplePresentQuizAttempts', JSON.stringify(attempts));
+}
+
+function loadHistory() {
+    const attempts = JSON.parse(localStorage.getItem('simplePresentQuizAttempts') || '[]');
+    const historyList = document.getElementById('historyList');
+    
+    if (attempts.length === 0) {
+        historyList.innerHTML = "<p>你还没有任何测验记录，快去做测验吧！</p>";
+        return;
+    }
+    
+    let html = "";
+    attempts.forEach((attempt, index) => {
+        html += `
+            <div class="question" style="margin-bottom: 20px; padding: 15px; background: white; border-radius: 8px;">
+                <h3>测验 #${index + 1} - ${attempt.date}</h3>
+                <p>姓名: ${attempt.name} | 年级: ${attempt.form}</p>
+                <p>得分: <strong>${attempt.score} / 20</strong></p>
+                <button onclick="viewAttemptDetails(${index})">查看详情</button>
+                <div style="margin-top: 10px;">
+                    <button class="whatsapp-btn" onclick="sendHistoryToWhatsApp(${index}, 'teacher')" style="font-size: 12px; padding: 8px 12px;">📱 发送成绩给老师</button>
+                    <button class="download-btn" onclick="generateHistoryReportImage(${index})" style="font-size: 12px; padding: 8px 12px;">🖼️ 生成成绩单图片</button>
+                </div>
+                <div id="attemptDetails${index}" style="display: none; margin-top: 10px;">
+                    ${attempt.results.map((r, qIndex) => `
+                        <div style="margin-bottom: 15px; padding: 10px; background: ${r.isCorrect ? '#e6ffe6' : '#ffe6e6'}; border-radius: 5px;">
+                            <p><strong>第${qIndex + 1}题：${r.isCorrect ? '正确 ✅' : '错误 ❌'}</strong></p>
+                            <p>题目: ${r.question}</p>
+                            ${!r.isCorrect ? `<p>你的答案: ${r.selected}</p>` : ''}
+                            <p>正确答案: ${r.correct}</p>
+                            <p>解释: ${r.explain}</p>
+                            <p>鼓励: ${r.encourage}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    });
+    
+    historyList.innerHTML = html;
+}
+
+function sendHistoryToWhatsApp(attemptIndex, recipient = 'teacher') {
+    const attempts = JSON.parse(localStorage.getItem('simplePresentQuizAttempts') || '[]');
+    const attempt = attempts[attemptIndex];
+    
+    if (!attempt) {
+        alert("找不到该测验记录！");
+        return;
+    }
+    
+    const percentage = Math.round((attempt.score / 20) * 100);
+    const grade = getGrade(attempt.score);
+    const unanswered = attempt.results.filter(r => r.selected === "未作答").length;
+    
+    let message = '';
+    let whatsappUrl = '';
+    
+    if (recipient === 'teacher') {
+        message += `尊敬的老师，您好！\n\n`;
+        message += `我是 ${attempt.name} (${attempt.form})，向您汇报Simple Present Tense Grammar测验成绩：\n\n`;
+        message += `📊 测验成绩: ${attempt.score}/20 分 (${percentage}%)\n`;
+        message += `⭐ 等级: ${grade}\n`;
+        message += `📅 测验时间: ${attempt.date}\n`;
+        if (unanswered > 0) {
+            message += `⚠️ 未完成题目: ${unanswered} 题\n`;
+        }
+        message += `\n🎯 掌握程度: ${getSkillLevel(attempt.score)}\n`;
+        
+        // Add wrong answers for teacher
+        const wrongAnswers = attempt.results.filter(r => !r.isCorrect);
+        if (wrongAnswers.length > 0) {
+            message += `\n❌ 需要加强的题目:\n`;
+            wrongAnswers.slice(0, 3).forEach((r, index) => {
+                const qNum = attempt.results.indexOf(r) + 1;
+                message += `${index + 1}. 第${qNum}题: 选择了"${r.selected}"，正确答案是"${r.correct}"\n`;
+            });
+            if (wrongAnswers.length > 3) {
+                message += `... 还有 ${wrongAnswers.length - 3} 道需要复习\n`;
+            }
+        }
+        
+        message += `\n我会针对错题进行复习，谢谢老师的指导！`;
+        
+        // Encode the message for URL
+        const encodedMessage = encodeURIComponent(message);
+        
+        // Create WhatsApp URL with specific teacher phone number
+        whatsappUrl = `https://wa.me/60127317286?text=${encodedMessage}`;
+        
+    } else {
+        // General message (keeping the original format)
+        message += `📚 Simple Present Tense Grammar Quiz 成绩报告\n\n`;
+        message += `👤 姓名: ${attempt.name}\n`;
+        message += `🎓 年级: ${attempt.form}\n`;
+        message += `📅 测验日期: ${attempt.date}\n`;
+        message += `📊 得分: ${attempt.score}/20 (${percentage}%)\n`;
+        message += `⭐ 等级: ${grade}\n`;
+        
+        if (unanswered > 0) {
+            message += `⚠️ 未作答题目: ${unanswered} 题\n`;
+        }
+        
+        message += `\n📝 评语: ${getFeedback(attempt.score)}\n`;
+        message += `\n🎯 简单现在时掌握程度: ${getSkillLevel(attempt.score)}\n`;
+        
+        // Add wrong answers details
+        const wrongAnswers = attempt.results.filter(r => !r.isCorrect);
+        if (wrongAnswers.length > 0) {
+            message += `\n❌ 错题分析:\n`;
+            wrongAnswers.slice(0, 3).forEach((r, index) => {
+                const qNum = attempt.results.indexOf(r) + 1;
+                message += `${index + 1}. 第${qNum}题: ${r.selected} → ${r.correct}\n`;
+            });
+            if (wrongAnswers.length > 3) {
+                message += `... 还有 ${wrongAnswers.length - 3} 道错题\n`;
+            }
+        }
+        
+        message += `\n💪 继续加油，学好英语语法！`;
+        
+        // Encode the message for URL
+        const encodedMessage = encodeURIComponent(message);
+        
+        // Create general WhatsApp URL
+        whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+    }
+    
+    // Open WhatsApp
+    window.open(whatsappUrl, '_blank');
+}
+
+function generateHistoryReportImage(attemptIndex) {
+    const attempts = JSON.parse(localStorage.getItem('simplePresentQuizAttempts') || '[]');
+    const attempt = attempts[attemptIndex];
+    
+    if (!attempt) {
+        alert("找不到该测验记录！");
+        return;
+    }
+    
+    const unanswered = attempt.results.filter(r => r.selected === "未作答").length;
+    const wrongAnswers = attempt.results.filter(r => !r.isCorrect).map((r, index) => ({
+        number: attempt.results.indexOf(r) + 1,
+        question: r.question.substring(0, 50) + "...",
+        selected: r.selected,
+        correct: r.correct
+    }));
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Calculate canvas height based on number of wrong answers
+    const baseHeight = 800;
+    const errorHeight = wrongAnswers.length * 30 + 100; // 30px per error + some padding
+    canvas.width = 800;
+    canvas.height = Math.max(baseHeight, baseHeight + errorHeight);
+    
+    // Background gradient
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#f8f9fa');
+    gradient.addColorStop(1, '#e9ecef');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Header background
+    ctx.fillStyle = '#4CAF50';
+    ctx.fillRect(0, 0, canvas.width, 120);
+    
+    // Title
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 32px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Simple Present Tense Quiz', canvas.width/2, 50);
+    ctx.fillText('简单现在时语法测验成绩单', canvas.width/2, 90);
+    
+    // Student Info Section
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 24px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText('学生信息 Student Information', 50, 170);
+    
+    ctx.font = '20px Arial';
+    ctx.fillText(`姓名 Name: ${attempt.name}`, 50, 210);
+    ctx.fillText(`年级 Form: ${attempt.form}`, 50, 240);
+    ctx.fillText(`测验日期 Date: ${attempt.date}`, 50, 270);
+    
+    // Score Section
+    const percentage = Math.round((attempt.score / 20) * 100);
+    
+    ctx.fillStyle = '#2196F3';
+    ctx.font = 'bold 24px Arial';
+    ctx.fillText('测验成绩 Test Results', 50, 320);
+    
+    // Score circle
+    const centerX = canvas.width - 150;
+    const centerY = 370;
+    const radius = 80;
+    
+    // Draw score circle background
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.fillStyle = attempt.score >= 15 ? '#4CAF50' : attempt.score >= 10 ? '#FF9800' : '#F44336';
+    ctx.fill();
+    
+    // Score text in circle
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 36px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${attempt.score}/20`, centerX, centerY - 10);
+    ctx.font = 'bold 20px Arial';
+    ctx.fillText(`${percentage}%`, centerX, centerY + 20);
+    
+    // Detailed scores
+    ctx.fillStyle = '#333';
+    ctx.font = '20px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText(`总分 Total Score: ${attempt.score}/20 (${percentage}%)`, 50, 360);
+    
+    if (unanswered > 0) {
+        ctx.fillStyle = '#F44336';
+        ctx.fillText(`未作答题目 Unanswered: ${unanswered} 题`, 50, 390);
+    }
+    
+    // Performance Analysis
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 24px Arial';
+    let currentY = unanswered > 0 ? 450 : 420;
+    ctx.fillText('表现分析 Performance Analysis', 50, currentY);
+    
+    ctx.font = '18px Arial';
+    const feedback = getFeedback(attempt.score);
+    const words = feedback.split(' ');
+    let line = '';
+    currentY += 30;
+    
+    for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        const testWidth = metrics.width;
+        if (testWidth > 700 && n > 0) {
+            ctx.fillText(line, 50, currentY);
+            line = words[n] + ' ';
+            currentY += 25;
+        } else {
+            line = testLine;
+        }
+    }
+    ctx.fillText(line, 50, currentY);
+    
+    // Wrong Answers Section
+    if (wrongAnswers.length > 0) {
+        currentY += 50;
+        ctx.fillStyle = '#F44336';
+        ctx.font = 'bold 20px Arial';
+        ctx.fillText(`错题分析 Wrong Answers (${wrongAnswers.length} 题)`, 50, currentY);
+        
+        ctx.fillStyle = '#333';
+        ctx.font = '16px Arial';
+        
+        // Show ALL wrong answers
+        wrongAnswers.forEach((error, index) => {
+            currentY += 30;
+            ctx.fillText(`${index + 1}. 第${error.number}题: ${error.selected} → ${error.correct}`, 50, currentY);
+        });
+    }
+    
+    // Footer
+    ctx.fillStyle = '#666';
+    ctx.font = '14px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('继续加油，学好英语语法！Keep up the good work!', canvas.width/2, canvas.height - 30);
+    
+    // Create download link
+    const link = document.createElement('a');
+    link.download = `Simple_Present_Tense_成绩单_${attempt.name}_${attempt.date.replace(/[/:]/g, '-')}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+    
+    // Also show success message
+    alert('成绩单图片已下载！您可以通过WhatsApp发送给老师 📱');
+}
+
+function viewAttemptDetails(index) {
+    const detailsDiv = document.getElementById(`attemptDetails${index}`);
+    if (detailsDiv.style.display === 'none') {
+        detailsDiv.style.display = 'block';
+    } else {
+        detailsDiv.style.display = 'none';
+    }
+}
+
+function saveProgress() {
+    const name = document.getElementById('name').value;
+    const form = document.getElementById('form').value;
+    
+    if (!name || !form) {
+        alert("请先填写个人信息！");
+        return;
+    }
+    
+    const progress = {
+        name,
+        form,
+        answers: []
+    };
+    
+    questions.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        progress.answers.push(selected ? selected.value : null);
+    });
+    
+    localStorage.setItem('simplePresentQuizProgress', JSON.stringify(progress));
+    alert("进度已保存！你可以稍后回来继续完成测验。");
+}
+
+function loadProgress() {
+    const progress = JSON.parse(localStorage.getItem('simplePresentQuizProgress'));
+    
+    if (!progress) {
+        alert("没有找到保存的进度！");
+        return;
+    }
+    
+    document.getElementById('name').value = progress.name;
+    document.getElementById('form').value = progress.form;
+    
+    progress.answers.forEach((answer, index) => {
+        if (answer) {
+            const radio = document.querySelector(`input[name="q${index}"][value="${answer}"]`);
+            if (radio) radio.checked = true;
+        }
+    });
+    
+    alert("进度已加载！你可以继续完成测验。");
+}
+
+window.onload = function() {
+    const qDiv = document.getElementById('questions');
+    questions.forEach((q, index) => {
+        const div = document.createElement('div');
+        div.className = "question";
+        div.innerHTML = `<p><strong>第${index + 1}题.</strong> ${q.q}</p>` +
+                        q.options.map(opt => `
+                            <label><input type="radio" name="q${index}" value="${opt}"> ${opt}</label><br>
+                        `).join('');
+        qDiv.appendChild(div);
+    });
+    
+    // Check if there's saved progress
+    if (localStorage.getItem('simplePresentQuizProgress')) {
+        if (confirm("检测到有保存的进度，是否加载？")) {
+            loadProgress();
+        }
+    }
+}
+</script>
+
+</body>
+</html>
